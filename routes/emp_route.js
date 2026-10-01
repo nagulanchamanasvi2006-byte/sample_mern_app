@@ -6,7 +6,7 @@ let {users}= require('../models/users');
 router.post("/register",async(req,res)=>{
     console.log(req.body);
     let newUser =users(req.body);
-    let result=await newuser.save();
+    let result=await newUser.save();
     res.send(result);
 })
 
