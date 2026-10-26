@@ -9,6 +9,8 @@ import Contact from './pages/Contact'
 import AdminLogin from './pages/AdminLogin'
 import AdminHome from './pages/AdminHome'
 import {Routes,Route} from 'react-router-dom'
+import Register from './pages/Register'
+import Login from './pages/Login'
 function App() {
   return (
     <div>
@@ -19,6 +21,8 @@ function App() {
     <Route path='/contact' element={<Contact></Contact>}></Route>
     <Route path='/adminlogin' element={<AdminLogin></AdminLogin>}></Route>
     <Route path='/adminhome' element={<AdminHome></AdminHome>}></Route>
+    <Route path='/register' element={<Register></Register>}></Route>
+    <Route path='/login' element={<Login></Login>}></Route>
     </Routes>
     <Footer />
     </div>
