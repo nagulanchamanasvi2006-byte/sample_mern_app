@@ -1,48 +1,62 @@
-let express = require('express');
-let router = express.Router();
-let {users}= require('../models/users');
+let express=require('express');
+let router=express.Router();
+let bcrypt=require('bcrypt');
+let {users}=require('../models/users');
 
 //localhost:3000/api/emp/register
-router.post("/register",async(req,res)=>{
+router.post("/register",async (req,res)=>{
     console.log(req.body);
-    let newUser =users(req.body);
-    let result=await newUser.save();
+    req.body.password = await bcrypt.hash(req.body.password,10);
+    let newuser=users(req.body);
+    let result= await newuser.save();
     res.send(result);
 })
 
-router.post("/login",async(req,res)=>{
-    const {email,password}=req.body;
-    if(typeof email!=="string"||typeof password!=="string"||!email||!password){
-        return res.status(400).json({message:"Email and password are required"});
-    }
-
-    try{
-        const user=await users.findOne({email});
-        if(!user||user.password!==password){
-            return res.status(401).json({message:"Invalid email or password"});
-        }
-
-        return res.json({
-            message:"Login successful",
-            user:{
-                id:user._id,
-                name:user.name,
-                email:user.email,
-                role:user.role
+router.post("/login",async (req,res)=>{
+    let result=await users.findOne({email:req.body.email})
+    if(result){
+let matchpass=await bcrypt.compare(req.body.password,result.password);
+    if(matchpass){
+        res.send({"msg":"login successfull",
+            "user":{
+                "id":result._id,
+                "name":result.name,
+                "email":result.email,
+                "role":result.role
             }
         });
-    }catch(error){
-        console.error("Login failed:",error);
-        return res.status(500).json({message:"Unable to log in. Please try again."});
+    }else{
+        res.send({"msg":"login failed"});
+    }
+    }else{
+        res.send({"msg":"user not found"});
     }
 })
 
-router.get("/view task",(req,res)=>{
+
+
+
+router.get("/viewtask",(req,res)=>{
     res.send("view task page called");
 })
-
-router.put("/updatestatus",(req,res)=>{
+router.patch("/updatestatus/", (req,res)=>{
     res.send("update status page called");
 })
 
-module.exports = router;
+router.patch("/updateprofile/:id",async (req,res)=>{
+  let data=req.body;
+  if(data.password){
+    data.password = await bcrypt.hash(data.password,10);
+  } 
+  let result=await users.findByIdAndUpdate(req.params.id,data,{new:true});
+  res.send(result);
+});
+
+
+
+
+
+
+
+
+module.exports=router;
