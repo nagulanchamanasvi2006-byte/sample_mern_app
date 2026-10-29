@@ -1,8 +1,6 @@
-import { useState } from 'react'
 import './App.css'
 import Header from './components/Header'
 import Footer from './components/Footer'
-import 'bootstrap/dist/css/bootstrap.min.css';
 import Home from './pages/Home'
 import About from './pages/About'
 import Contact from './pages/Contact'
@@ -15,8 +13,9 @@ import HrHome from './pages/HrHome'
 import EmpHome from './pages/EmpHome'
 function App() {
   return (
-    <div>
+    <div className="app-shell">
     <Header />
+    <div className="app-main">
     <Routes>
     <Route path='/' element={<Home></Home>}></Route>
     <Route path='/about' element={<About></About>}></Route>
@@ -28,6 +27,7 @@ function App() {
     <Route path='/hrhome' element={<HrHome></HrHome>}></Route>
     <Route path='/emphome' element={<EmpHome></EmpHome>}></Route>
     </Routes>
+    </div>
     <Footer />
     </div>
   )
